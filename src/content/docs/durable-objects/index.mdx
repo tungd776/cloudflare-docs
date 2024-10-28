@@ -19,17 +19,7 @@ Create collaborative applications, real-time chat, multiplayer games and more wi
 
 <Plan type="paid" />
 
-## What are Durable Objects?
-
-Durable Objects are a part of the Cloudflare Workers serverless platform. A Durable Object is essentially a small server that can be addressed by a unique name and can keep state both in-memory and on-disk. Workers running anywhere on Cloudflare's network can send messages to a Durable Object by its name, and all messages addressed to the same name — from anywhere in the world — will find their way to the same Durable Object instance.
-
-Durable Objects are intended to be small and numerous. A single application can create billions of Durable Objects distributed across our global network. Cloudflare automatically decides [where a Durable Object should live](/durable-objects/reference/data-location/) based on where it is accessed, automatically starts it up as needed when requests arrive, and shuts it down when idle. A Durable Object has in-memory state while running and can also optionally store long-lived durable state. Since there is exactly one Durable Object for each name, a Durable Object can be used to coordinate between operations on the same logical object.
-
-## Utilize Durable Objects
-
 Durable Objects provide a powerful compute API for coordinating multiple clients or users. Each Durable Object has private, transactional and strongly consistent storage attached.
-
-They are especially good at real-time collaboration, but are not limited to this use case. They are general-purpose servers that can implement any logic you desire to serve requests. More generally, Durable Objects are a basic building block for distributed systems.
 
 Use Durable Objects to build collaborative editing tools, interactive chat, multiplayer games and applications that need coordination among multiple clients, without requiring you to build serialization and coordination primitives on your own.
 
