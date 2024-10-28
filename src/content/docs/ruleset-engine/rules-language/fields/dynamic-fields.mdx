@@ -16,7 +16,9 @@ Dynamic fields represent computed or derived values, typically related to threat
 
 - Access to `cf.bot_management.*` fields requires a Cloudflare Enterprise plan with [Bot Management](/bots/plans/bm-subscription/) enabled.
 
-- Access to `cf.waf.content_scan.*` fields requires a Cloudflare Enterprise plan with [WAF content scanning](/waf/about/content-scanning/) enabled.
+- Access to `cf.waf.content_scan.*` fields requires a Cloudflare Enterprise plan with [malicious uploads detection](/waf/detections/malicious-uploads/) enabled.
+
+- Access to fields `cf.waf.auth_detected` and `cf.waf.credential_check.*` depends on your Cloudflare plan and add-ons. For more information, refer to [Leaked credentials detection](/waf/detections/leaked-credentials/).
 
 - The `cf.tls_client_auth.*` string fields are only filled in if the request includes a client certificate for [mTLS authentication](/ssl/client-certificates/enable-mtls/).
 
@@ -372,7 +374,7 @@ Example:
 
 When `true`, the request contains at least one [content object](https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/).
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.has_malicious_obj`
 
@@ -380,7 +382,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 When `true`, the request contains at least one malicious content object.
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.num_malicious_obj`
 
@@ -388,7 +390,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 The number of malicious content objects detected in the request (zero or greater).
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.has_failed`
 
@@ -396,7 +398,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 When `true`, the file scanner was unable to scan all the content objects detected in the request.
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.num_obj`
 
@@ -404,7 +406,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 The number of content objects detected in the request (zero or greater).
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.obj_sizes`
 
@@ -412,7 +414,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 An array of file sizes in bytes, in the order the content objects were detected in the request.
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.obj_types`
 
@@ -420,7 +422,7 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 An array of file types in the order the content objects were detected in the request. If Cloudflare cannot determine the file type of a content object, the corresponding value in the `obj_types` array will be `application/octet-stream`.
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.content_scan.obj_results`
 
@@ -428,13 +430,13 @@ For more details, refer to [Uploaded content scanning](/waf/about/content-scanni
 
 An array of scan results in the order the content objects were detected in the request. The possible values are: `clean`, `suspicious`, `infected`, and `not scanned`.
 
-For more details, refer to [Uploaded content scanning](/waf/about/content-scanning/).
+For more details, refer to [Malicious uploads detection](/waf/detections/malicious-uploads/).
 
 ## `cf.waf.score`
 
 `cf.waf.score` `Number`
 
-A global score from 1 to 99 that combines the score of each WAF attack vector into a single score. This is the standard [WAF attack score](/waf/about/waf-attack-score/) to detect variants of attack patterns.
+A global score from 1 to 99 that combines the score of each WAF attack vector into a single score. This is the standard [WAF attack score](/waf/detections/attack-score/) to detect variants of attack patterns.
 
 ## `cf.waf.score.sqli`
 
@@ -460,6 +462,46 @@ An attack score from 1 to 99 classifying the command injection or Remote Code Ex
 
 The attack score class of the current request, based on the WAF attack score. Can have one of the following values: `attack`, `likely_attack`, `likely_clean`, `clean`.
 
+## `cf.waf.auth_detected`
+
+`cf.waf.auth_detected` `Boolean`
+
+When `true`, the Cloudflare WAF detected authentication credentials in the request.
+
+Only available when [leaked credentials detection](/waf/detections/leaked-credentials/) is enabled.
+
+## `cf.waf.credential_check.password_leaked`
+
+`cf.waf.credential_check.password_leaked` `Boolean`
+
+When `true`, the password detected in the request was previously leaked.
+
+Only available when [leaked credentials detection](/waf/detections/leaked-credentials/) is enabled.
+
+## `cf.waf.credential_check.username_leaked`
+
+`cf.waf.credential_check.username_leaked` `Boolean`
+
+When `true`, the username detected in the request was previously leaked.
+
+Only available when [leaked credentials detection](/waf/detections/leaked-credentials/) is enabled.
+
+## `cf.waf.credential_check.username_and_password_leaked`
+
+`cf.waf.credential_check.username_and_password_leaked` `Boolean`
+
+When `true`, the authentication credentials detected in the request (username and password pair) were previously leaked.
+
+Only available when [leaked credentials detection](/waf/detections/leaked-credentials/) is enabled.
+
+## `cf.waf.credential_check.username_password_similar`
+
+`cf.waf.credential_check.username_password_similar` `Boolean`
+
+When `true`, a similar version of the username and password credentials detected in the request were previously leaked.
+
+Only available when [leaked credentials detection](/waf/detections/leaked-credentials/) is enabled.
+
 ## `cf.worker.upstream_zone`
 
 `cf.worker.upstream_zone` `String`
@@ -469,3 +511,67 @@ Identifies whether a request comes from a worker or not. When a request comes fr
 ## Corporate Proxy
 
 <Render file="corporate_proxy" product="bots" />
+
+## JSON Web Tokens Validation claims
+
+[API Shield](/api-shield/) users can now create [custom rules](/waf/custom-rules/) using claims present in tokens processed by [JSON Web Tokens Validation](/api-shield/security/jwt-validation/).
+
+### `aud` (audience)
+
+`http.request.jwt.claims.aud` `Map<Array<String>>` <br />
+`http.request.jwt.claims.aud.names` `Array<String>` <br />
+`http.request.jwt.claims.aud.values` `Array<String>` <br />
+
+The `aud` (audience) claim identifies the recipients that the JSON Web Token (JWT) is intended for. Each principal intended to process the JWT must identify itself with a value in the audience claim. In the general case, the `aud` value is an array of case-sensitive strings, each containing a `StringOrURI` value.
+
+<Render file="jwt-claims" product="api-shield" />
+
+### `iat` (issued at)
+
+`http.request.jwt.claims.iat.sec` `Map<Array<Integer>>` <br />
+`http.request.jwt.claims.iat.sec.names` `Array<String>` <br />
+`http.request.jwt.claims.iat.sec.values` `Array<Integer>` <br />
+
+The `iat` (issued at) claim identifies the time (number of seconds) at which the JWT was issued.
+
+<Render file="jwt-claims" product="api-shield" />
+
+### `iss` (issuer)
+
+`http.request.jwt.claims.iss` `Map<Array<String>>` <br />
+`http.request.jwt.claims.iss.names` `Array<String>` <br />
+`http.request.jwt.claims.iss.values` `Array<String>` <br />
+
+The `iss` (issuer) claim identifies the principal that issued the JWT.
+
+<Render file="jwt-claims" product="api-shield" />
+
+### `jti` (JWT ID)
+
+`http.request.jwt.claims.jti` `Map<Array<String>>` <br />
+`http.request.jwt.claims.jti.names`	`Array<String>` <br />
+`http.request.jwt.claims.jti.values` `Array<String>` <br />
+
+The `jti` (JWT ID) claim provides a unique identifier for the JWT.
+
+<Render file="jwt-claims" product="api-shield" />
+
+### `nbf` (not before)
+
+`http.request.jwt.claims.nbf.sec` `Map<Array<Integer>>` <br />
+`http.request.jwt.claims.nbf.sec.names` `Array<String>` <br />
+`http.request.jwt.claims.nbf.sec.values` `Array<Integer>` <br />
+
+The `nbf` (not before) claim identifies the time (number of seconds) before which the JWT must not be accepted for processing.
+
+<Render file="jwt-claims" product="api-shield" />
+
+### `sub` (subject)
+
+`http.request.jwt.claims.sub` `Map<Array<String>>` <br />
+`http.request.jwt.claims.sub.names` `Array<String>` <br />
+`http.request.jwt.claims.sub.values` `Array<String>` <br />
+
+The `sub` (subject) claim identifies the principal that is the subject of the JWT. The claims in a JWT are normally statements about the subject.
+
+<Render file="jwt-claims" product="api-shield" />
