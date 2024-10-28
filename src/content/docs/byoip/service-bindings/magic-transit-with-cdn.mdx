@@ -11,12 +11,15 @@ import { Details, Example, TabItem, Tabs, GlossaryTooltip } from "~/components";
 
 [Magic Transit](/magic-transit/) customers using [BYOIP](/byoip/) can also benefit from the performance, reliability, and security that Cloudflare offers for HTTP-based applications.
 
-This configuration will use the [IP address management service bindings](/byoip/service-bindings/) to enable Cloudflare [CDN services (Cache)](/cache/) on top of Magic Transit, on individual IP addresses or on a subnet.
+This documentation covers using the Cloudflare API to configure Service Bindings within Cloudflare's IP Address Management framework. Service Bindings allow BYOIP customers to selectively route traffic on a per-IP address basis to the CDN pipeline (Caching, WAF, etc).
+
+It is also possible to define Service Bindings to route traffic to the Spectrum pipeline selectively; however, that will be covered elsewhere.
+
+It is important to note that traffic routed to the CDN pipeline is protected at Layers 3 and 4 by the inherent DDoS Protection capabilities native to the CDN pipeline.
 
 ## Before you begin
 
-- Consider the service bindings [scope and limitations](/byoip/service-bindings/).
-- Plan for what IP addresses you want to configure. If you want to add CDN to multiple contiguous IP addresses, specifying a CIDR block that incorporates all IPs is more efficient.
+Efficiency is paramount when planning how you will implement Service Bindings. Implementing Service Bindings through an aggregated CIDR block is strongly recommended.
 
   <Details header="Example" >
 
@@ -37,7 +40,8 @@ This configuration will use the [IP address management service bindings](/byoip/
 
   </Details>
 
-- Note that a transitional state will take place for four to six hours after you create the service binding. During this time, traffic destined to your origins will slowly transition from the Magic Transit pipeline to the CDN pipeline.
+Once a Service Binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's Global Network. Services for the IP address(es) in scope will likely be disrupted during this window.
+
 
 ## 1. Get account information
 
@@ -70,7 +74,7 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/addressing/prefi
 ## 2. Create service binding
 
 :::caution[Caution]
-Once this step is completed, a four to six-hour propagation state will initiate. Only after the service binding reaches an **active** state, all traffic will be processed through the CDN pipeline.
+Once a Service Binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's Global Network. Services for the IP address(es) in scope will likely be disrupted during this window.
 :::
 
 1. Make a `POST` request to the [Create Service Binding](/api/operations/ip-address-management-service-bindings-create-service-binding/) endpoint, indicating the IP address you want to bind to the CDN. Specify the **corresponding network mask** as needed.
@@ -112,7 +116,7 @@ In the response body, the initial provisioning state should be `provisioning`.
 ```
 </Example>
 
-2. (Optional) Through the four to six hours that your change will take to propagate, you can use the [List Service Bindings](/api/operations/ip-address-management-service-bindings-list-service-bindings) endpoint to programmatically check for the `active` provisioning state.
+You can periodically check the Service Binding status using the [List Service Bindings](/api/operations/ip-address-management-service-bindings-list-service-bindings) endpoint.
 
 ## 3. Create address maps
 
