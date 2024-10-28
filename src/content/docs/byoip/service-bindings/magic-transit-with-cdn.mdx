@@ -11,15 +11,15 @@ import { Details, Example, TabItem, Tabs, GlossaryTooltip } from "~/components";
 
 [Magic Transit](/magic-transit/) customers using [BYOIP](/byoip/) can also benefit from the performance, reliability, and security that Cloudflare offers for HTTP-based applications.
 
-This documentation covers using the Cloudflare API to configure Service Bindings within Cloudflare's IP Address Management framework. Service Bindings allow BYOIP customers to selectively route traffic on a per-IP address basis to the CDN pipeline (Caching, WAF, etc).
+This documentation covers using the Cloudflare API to configure service bindings within Cloudflare's IP Address Management framework. Service bindings allow BYOIP customers to selectively route traffic on a per-IP address basis to the CDN pipeline (which includes [Cache](/cache/), [WAF](/waf/), and more).
 
-It is also possible to define Service Bindings to route traffic to the Spectrum pipeline selectively; however, that will be covered elsewhere.
+It is also possible to define service bindings to route traffic to the Spectrum pipeline selectively. However, this is not in the scope of this guide.
 
-It is important to note that traffic routed to the CDN pipeline is protected at Layers 3 and 4 by the inherent DDoS Protection capabilities native to the CDN pipeline.
+It is important to note that traffic routed to the CDN pipeline is protected at Layers 3 and 4 by the inherent DDoS protection capabilities native to the CDN pipeline.
 
 ## Before you begin
 
-Efficiency is paramount when planning how you will implement Service Bindings. Implementing Service Bindings through an aggregated CIDR block is strongly recommended.
+Efficiency is paramount when planning how you will implement service bindings. Implementing service bindings through an aggregated CIDR block is strongly recommended.
 
   <Details header="Example" >
 
@@ -36,11 +36,11 @@ Efficiency is paramount when planning how you will implement Service Bindings. I
   `203.0.113.22`
   `203.0.113.23`
 
-  **Best practice:** Add one discrete CDN Service Binding for `203.0.113.16` with a `/29` netmask.
+  **Best practice:** Add one discrete CDN service binding for `203.0.113.16` with a `/29` netmask.
 
   </Details>
 
-Once a Service Binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's Global Network. Services for the IP address(es) in scope will likely be disrupted during this window.
+Once a service binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's global  network. Services for the IP addresses in scope will likely be disrupted during this window.
 
 
 ## 1. Get account information
@@ -74,10 +74,10 @@ curl https://api.cloudflare.com/client/v4/accounts/{account_id}/addressing/prefi
 ## 2. Create service binding
 
 :::caution[Caution]
-Once a Service Binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's Global Network. Services for the IP address(es) in scope will likely be disrupted during this window.
+Once a service binding is created (or deleted), it will take four to six hours to propagate across Cloudflare's global network. Services for the IP addresses in scope will likely be disrupted during this window.
 :::
 
-1. Make a `POST` request to the [Create Service Binding](/api/operations/ip-address-management-service-bindings-create-service-binding/) endpoint, indicating the IP address you want to bind to the CDN. Specify the **corresponding network mask** as needed.
+1. Make a `POST` request to the [Create service binding](/api/operations/ip-address-management-service-bindings-create-service-binding/) endpoint, indicating the IP address you want to bind to the CDN. Specify the **corresponding network mask** as needed.
 
 <Example>
 
@@ -116,7 +116,7 @@ In the response body, the initial provisioning state should be `provisioning`.
 ```
 </Example>
 
-You can periodically check the Service Binding status using the [List Service Bindings](/api/operations/ip-address-management-service-bindings-list-service-bindings) endpoint.
+You can periodically check the service binding status using the [List Service Bindings](/api/operations/ip-address-management-service-bindings-list-service-bindings) endpoint.
 
 ## 3. Create address maps
 
